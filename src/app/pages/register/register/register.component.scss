@@ -1,0 +1,32 @@
+#email, #password {
+  min-height: 40px;
+}
+
+.login__wrapper {
+  // width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+label {
+  font-size: .7rem;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: .3rem 0;
+}
+
+ion-card {
+  box-shadow: none;
+}
+
+ion-card-content {
+  padding: 1.5rem 0
+}
+
+.form__control {
+  margin-bottom: .75rem;
+}
+
+ion-card-header {
+  padding: 1rem 0px 1rem 0px;
+}

@@ -1,0 +1,43 @@
+<ion-grid fixed="true">
+  <ion-row class="ion-justify-content-center">
+    <ion-col>
+      <!-- <div class="ion-justify-content-center"> -->
+      <form [formGroup]="loginForm" (submit)="handleSubmit()">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Log in</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="form__control">
+              <label for="email">Email</label>
+              <ion-input
+                formControlName="email"
+                id="email"
+                placeholder="Your email"
+                fill="solid"
+              >
+              </ion-input>
+            </div>
+
+            <div class="form__control">
+              <label for="password">Password</label>
+              <ion-input
+                id="password"
+                labelPlacement="stacked"
+                placeholder="Your password"
+                formControlName="password"
+                fill="solid"
+              >
+              </ion-input>
+            </div>
+            
+            <p>
+              <ion-text color="warning">{{ message }}</ion-text>
+            </p>
+          </ion-card-content>
+          <ion-button type="submit" size='small'>Sign in</ion-button>
+        </ion-card>
+      </form>
+    </ion-col>
+  </ion-row>
+</ion-grid>
