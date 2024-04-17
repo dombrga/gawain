@@ -1,3 +1,7 @@
+#email, #password {
+  min-height: 40px;
+}
+
 .login__wrapper {
   // width: 50%;
   display: flex;
@@ -13,7 +17,6 @@ label {
 
 ion-card {
   box-shadow: none;
-  // width: 80%;
 }
 
 ion-card-content {
@@ -24,6 +27,6 @@ ion-card-content {
   margin-bottom: .75rem;
 }
 
-#email, #password {
-  min-height: 40px;
+ion-card-header {
+  padding: 1rem 0px 1rem 0px;
 }

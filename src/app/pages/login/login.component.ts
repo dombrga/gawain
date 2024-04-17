@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonInput, IonRow, IonText } from '@ionic/angular/standalone';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonInput, IonLabel, IonRow, IonText } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@/app/services/supabase/auth/auth.service';
 import { CommonModule } from '@angular/common';
@@ -15,9 +15,8 @@ import { CommonModule } from '@angular/common';
     CommonModule, RouterLink,
     ReactiveFormsModule,
     IonContent,
-    IonInput, IonButton,
+    IonInput, IonButton, IonLabel, IonText,
     IonGrid, IonRow, IonCol,
-    IonText,
     IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle,
   ],
 })

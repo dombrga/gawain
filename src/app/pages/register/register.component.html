@@ -9,32 +9,31 @@
           </ion-card-header>
 
           <ion-card-content>
-              <div class="form__control">
-                <label for="email">Email</label>
-                <ion-input
-                  formControlName="email"
-                  id="email"
-                  placeholder="Your email"
-                  fill="solid"
-                >
-                </ion-input>
-              </div>
+            <div class="form__control">
+              <ion-label for="email">Email</ion-label>
+              <ion-input
+                id="email"
+                fill="solid"
+                formControlName="email"
+                placeholder="Your email"
+              >
+              </ion-input>
+            </div>
 
-              <div class="form__control">
-                <label for="password">Password</label>
-                <ion-input
-                  id="password"
-                  labelPlacement="stacked"
-                  placeholder="Your password"
-                  formControlName="password"
-                  fill="solid"
-                >
-                </ion-input>
-              </div>
+            <div class="form__control">
+              <ion-label for="password">Password</ion-label>
+              <ion-input
+                id="password"
+                fill="solid"
+                placeholder="Your password"
+                formControlName="password"
+              >
+              </ion-input>
+            </div>
 
-              <p>
-                <ion-text color="warning">{{ message }}</ion-text>
-              </p>
+            <p>
+              <ion-text color="warning">{{ message }}</ion-text>
+            </p>
           </ion-card-content>
 
         <ion-button type="submit" size='small'>Register</ion-button>

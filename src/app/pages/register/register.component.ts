@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonInput, IonRow, IonText } from '@ionic/angular/standalone';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonInput, IonLabel, IonRow, IonText } from '@ionic/angular/standalone';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -15,7 +15,7 @@ import { Subject } from 'rxjs';
     CommonModule,
     ReactiveFormsModule,
     IonContent,
-    IonInput, IonButton, IonText,
+    IonInput, IonButton, IonText, IonLabel,
     IonGrid, IonRow, IonCol,
     IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle,
   ]
