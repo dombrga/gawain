@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { IonApp, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonMenu, IonMenuButton, IonMenuToggle, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import { MenuComponent } from './components/tasks/menu/menu.component';
+import { MenuComponent } from './components/menu/menu.component';
 
 @Component({
   selector: 'app-root',
