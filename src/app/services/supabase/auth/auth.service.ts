@@ -45,11 +45,16 @@ export class AuthService {
     return this.user$
       .pipe(
         switchMap(user => {
+          console.log('url', this.router.url)
+          const url = this.router.url;
           if(user) {
             return of(true);
           }
-          const urlTree = this.router.createUrlTree(['login']);
-          return of(urlTree);
+          console.log('url22', this.router.url)
+          // const urlTree = this.router.createUrlTree(['login']);
+          this.router.navigateByUrl('/login')
+          return of(false);
+          // return of(urlTree);
         })
       );
   }
