@@ -1,12 +1,10 @@
 import { AuthService } from '@/app/services/supabase/auth/auth.service';
-import { UserLogin } from '@/app/types/User.type';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonInput, IonRow } from '@ionic/angular/standalone';
-import { AuthError } from '@supabase/supabase-js';
-import { Subject, finalize } from 'rxjs';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonInput, IonRow, IonText } from '@ionic/angular/standalone';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -17,54 +15,58 @@ import { Subject, finalize } from 'rxjs';
     CommonModule,
     ReactiveFormsModule,
     IonContent,
-    IonInput, IonButton,
+    IonInput, IonButton, IonText,
     IonGrid, IonRow, IonCol,
     IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle,
   ]
 })
 export class RegisterComponent implements OnInit {
-  destroy$ = new Subject()
+  destroy$ = new Subject();
 
   // form
-  registerForm: FormGroup
+  registerForm: FormGroup;
   isLoading = false;
-  // id, type(task or note), hours, task, tags[], isDone, createdDate(isostring), updatedDate(isostring), comments[]?
+  message = '';
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
   ) {
     this.registerForm = this.fb.group({
       email: [''],
-      password: ['']
-    })
+      password: [''],
+    });
   }
 
   ngOnInit() {
   }
 
-  private _finalize() {
-    return finalize(() => {
-      console.log('finalizing')
-      this.isLoading = false;
-    })
+  get email() {
+    return this.registerForm.get('email')?.value;
   }
 
-  handleSubmit() {
+  get password() {
+    return this.registerForm.get('password')?.value;
+  }
+
+  handleRegister() {
     this.isLoading = true;
-    const { email, password } = this.registerForm.value as UserLogin;
-    this.authService.signUp(email, password)
-      .pipe(
-        this._finalize(),
-      )
+    this.authService.register(this.email, this.password)
       .subscribe({
-        next: e => {
-          this.router.navigateByUrl('')
+        next: (e) => {
+          if(e.error) {
+            this.message = `${e.error.message}`;
+            return
+          }
+          this.router.navigateByUrl('/tasks')
         },
-        error: (e: AuthError) => {
-          console.log('error signup', e);
+        error: (e) => {
+          console.log('error register', e);
         }
+      })
+      .add(() => {
+        this.isLoading = false;
       })
   }
 

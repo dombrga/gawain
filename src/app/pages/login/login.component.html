@@ -2,7 +2,7 @@
   <ion-row class="ion-justify-content-center">
     <ion-col>
       <!-- <div class="ion-justify-content-center"> -->
-      <form [formGroup]="loginForm" (submit)="handleSubmit()">
+      <form [formGroup]="loginForm" (submit)="handleLogin()">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Log in</ion-card-title>
@@ -35,7 +35,9 @@
               <ion-text color="warning">{{ message }}</ion-text>
             </p>
           </ion-card-content>
-          <ion-button type="submit" size='small'>Sign in</ion-button>
+          <ion-button type="submit" size='small'>Log in</ion-button>
+          <!-- <ion-button type="button" (click)='handleLogOut()' size='small'>Log out</ion-button>
+          <a routerLink="/register">Register</a> -->
         </ion-card>
       </form>
     </ion-col>

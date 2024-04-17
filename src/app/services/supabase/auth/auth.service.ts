@@ -1,39 +1,61 @@
 import { Injectable } from '@angular/core';
-import { Observable, ObservableInput, catchError, defer, of, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, defer, of, switchMap, throwError } from 'rxjs';
 import { SupabaseService } from '../supabase.service';
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
-import { AuthResponse, AuthTokenResponsePassword, User } from '@supabase/supabase-js';
-import { AuthDetails, SupabaseAuthResponse } from '@/app/types/User.type';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { User } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  // auth
   private auth: SupabaseAuthClient;
-  loggedInUser!: AuthDetails
+
+  // user
+  private user = new BehaviorSubject<User | null | undefined>(null);
+  get user$() {
+    return this.user.asObservable();
+  }
 
   constructor(
     private supabase: SupabaseService,
-    private http: HttpClient
+    private router: Router,
   ) { 
     this.auth = this.supabase.supabase.auth;
+
+    this.auth.onAuthStateChange((event, session) => {
+      console.log('auth change', event, session?.user)
+      if (event === 'INITIAL_SESSION') {
+        this.user.next(session?.user ? session.user : null);
+      } else if (event === 'SIGNED_IN') {
+        this.user.next(session?.user)
+      } else if (event === 'SIGNED_OUT') {
+        this.user.next(null);
+      // } else if (event === 'PASSWORD_RECOVERY') {
+      // } else if (event === 'TOKEN_REFRESHED') {
+      } else if (event === 'USER_UPDATED') {
+        this.user.next(session?.user);
+      }
+    })
   }
 
-  get isLoggedIn(): boolean {
-    return !!this.loggedInUser.user || !!this.loggedInUser.session;
-  }
-
-  signUp(email: string, password: string) {
-    return defer(() => this.auth.signUp({ email, password}))
+  // for route guard
+  isLoggedIn() {
+    return this.user$
       .pipe(
-        switchMap(e => {
-          if(e.error) {
-            return throwError(() => new Error(e.error.message))
+        switchMap(user => {
+          if(user) {
+            return of(true);
           }
-          return of(e.data)
-        }),
-      )
+          const urlTree = this.router.createUrlTree(['login']);
+          return of(urlTree);
+        })
+      );
+  }
+
+  register(email: string, password: string) {
+    return defer(() => this.auth.signUp({ email, password}));
   }
 
   login(email: string, password: string) {
@@ -41,12 +63,20 @@ export class AuthService {
       .pipe(
         // add http interceptor?
         catchError((e) => {
-          return throwError(() => e)
+          return throwError(() => e);
         })
       );
   }
 
-  signOut() {
-    return defer(() => this.auth.signOut());
+  logOut() {
+    return defer(() => this.auth.signOut({ scope: 'local' }));
   }
+
+  // getSession() {
+  //   return defer(() => this.auth.getSession());
+  // }
+
+  // getUser() {
+  //   return defer(() => this.auth.getUser());
+  // }
 }

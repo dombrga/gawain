@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, finalize, map } from 'rxjs';
+import { Subject } from 'rxjs';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonInput, IonRow, IonText } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@/app/services/supabase/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { SupabaseAuthResponse, UserLogin } from '@/app/types/User.type';
-import { AuthResponse, AuthResponsePassword, AuthTokenResponsePassword } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
   imports: [
-    CommonModule,
+    CommonModule, RouterLink,
     ReactiveFormsModule,
     IonContent,
     IonInput, IonButton,
@@ -20,50 +20,52 @@ import { AuthResponse, AuthResponsePassword, AuthTokenResponsePassword } from '@
     IonText,
     IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle,
   ],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
-  destroy$ = new Subject()
+export class LoginComponent implements OnInit, OnDestroy {
+  destroy$ = new Subject();
 
   // form
-  loginForm: FormGroup
+  loginForm: FormGroup;
   isLoading = false;
-  // id, type(task or note), hours, task, tags[], isDone, createdDate(isostring), updatedDate(isostring), comments[]?
 
   message?: string
   
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
   ) {
     this.loginForm = this.fb.group({
       email: [''],
-      password: ['']
+      password: [''],
     });
   }
 
   ngOnInit() {
   }
 
-  handleSubmit() {
+  get email() {
+    return this.loginForm.get('email')?.value;
+  }
+
+  get password() {
+    return this.loginForm.get('password')?.value;
+  }
+
+  handleLogin() {
     this.isLoading = true;
-    const { email, password } = this.loginForm.value as UserLogin;
-    this.authService.login(email, password)
+    this.authService.login(this.email, this.password)
       .subscribe({
-        next: (e) => {
-          if(e.error) {
-            this.message = `${e.error.message}`
-            return
+        next: ({ data, error }) => {
+          if(error) {
+            this.message = `${error.message}`;
+            return;
           }
-          
-          console.log('logged in', e)
-          this.authService.loggedInUser = e.data
+
           this.router.navigateByUrl('/');
         },
         error: (e) => {
-          console.error(e)
+          console.error('error login', e);
         }
       })
       .add(() => {
@@ -71,8 +73,8 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  handleSignout() {
-    this.authService.signOut().subscribe();
+  handleLogOut() {
+    this.authService.logOut().subscribe();
   }
 
   ngOnDestroy() {
