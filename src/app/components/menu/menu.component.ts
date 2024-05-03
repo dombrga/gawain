@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IonContent, IonHeader, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonTitle, IonToolbar } from '@ionic/angular/standalone';
-import { NgFor } from '@angular/common';
+import { IonContent, IonHeader, IonItem, IonLabel, IonList, IonMenu, IonMenuButton, IonMenuToggle, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { CommonModule, NgFor } from '@angular/common';
 import { MenuItem } from '@/app/types/navigation.type';
 import { MenuItemComponent } from './menu-item/menu-item.component';
+import { AuthService } from '@/app/services/supabase/auth/auth.service';
 
 @Component({
   selector: 'app-menu',
@@ -10,9 +11,9 @@ import { MenuItemComponent } from './menu-item/menu-item.component';
   styleUrls: ['./menu.component.scss'],
   standalone: true,
   imports: [
-    NgFor,
+    CommonModule,
     IonContent, IonList,
-    IonToolbar, IonHeader, IonTitle,
+    IonToolbar, IonHeader, IonTitle, IonItem, IonLabel,
     IonMenu, IonMenuButton, IonMenuToggle,
     MenuItemComponent,
   ]
@@ -24,8 +25,26 @@ export class MenuComponent implements OnInit {
     { text: 'Register', route: '/register' },
   ];
 
-  constructor() { }
+  isLoggedIn = false;
 
-  ngOnInit() {}
+  constructor(
+    private authService: AuthService,
+  ) {
 
+  }
+
+  ngOnInit() {
+    this.authService.user$.subscribe(u => {
+      this.isLoggedIn = !!u;
+    })
+  }
+
+  handleLogout() {
+    console.log('logging out')
+    this.authService.logOut().subscribe({
+      next: () => {
+        console.log('logged out')
+      }
+    })
+  }
 }

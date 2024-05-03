@@ -17,6 +17,9 @@ export class AuthService {
   get user$() {
     return this.user.asObservable();
   }
+  setUser(u: User | null | undefined) {
+    this.user.next(u)
+  }
 
   constructor(
     private supabase: SupabaseService,
@@ -27,11 +30,11 @@ export class AuthService {
     this.auth.onAuthStateChange((event, session) => {
       console.log('auth change', event, session?.user)
       if (event === 'INITIAL_SESSION') {
-        this.user.next(session?.user ? session.user : null);
+        this.setUser(session?.user ? session.user : null);
       } else if (event === 'SIGNED_IN') {
-        this.user.next(session?.user)
+        this.setUser(session?.user)
       } else if (event === 'SIGNED_OUT') {
-        this.user.next(null);
+        this.setUser(null);
       // } else if (event === 'PASSWORD_RECOVERY') {
       // } else if (event === 'TOKEN_REFRESHED') {
       } else if (event === 'USER_UPDATED') {
@@ -41,23 +44,23 @@ export class AuthService {
   }
 
   // for route guard
-  isLoggedIn() {
-    return this.user$
-      .pipe(
-        switchMap(user => {
-          console.log('url', this.router.url)
-          const url = this.router.url;
-          if(user) {
-            return of(true);
-          }
-          console.log('url22', this.router.url)
-          // const urlTree = this.router.createUrlTree(['login']);
-          this.router.navigateByUrl('/login')
-          return of(false);
-          // return of(urlTree);
-        })
-      );
-  }
+  // isLoggedIn() {
+  //   return this.user$
+  //     .pipe(
+  //       switchMap(user => {
+  //         const url = this.router.url;
+  //         if(user) {
+  //           return of(true);
+  //         }
+          
+  //         this.router.navigateByUrl('/login')
+  //         return of(false);
+  //         // you can also do this
+  //         // const urlTree = this.router.createUrlTree(['login']);
+  //         // return of(urlTree);
+  //       })
+  //     );
+  // }
 
   register(email: string, password: string) {
     return defer(() => this.auth.signUp({ email, password}));

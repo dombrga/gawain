@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonInput, IonLabel, IonRow, IonText } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@/app/services/supabase/auth/auth.service';
@@ -41,6 +41,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.authService.user$
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe(u => {
+        console.log('sub in log comp');
+        if(u) this.router.navigateByUrl('/tasks')
+      })
   }
 
   get email() {
@@ -52,6 +60,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   handleLogin() {
+    console.log('logging in');
     this.isLoading = true;
     this.authService.login(this.email, this.password)
       .subscribe({
@@ -77,6 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('destroying login');
     this.destroy$.next('');
     this.destroy$.complete();
   }
