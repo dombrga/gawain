@@ -1,0 +1,30 @@
+<ion-button id="open-custom-dialog" expand="block">add note</ion-button>
+
+<ion-modal id="add-note-modal" #modal trigger="open-custom-dialog">
+  <ng-template>
+    <div class="wrapper">
+      <h1>New Note</h1>
+
+      <ion-list lines="none">
+        <ion-item>
+          <ion-textarea 
+            role="textbox" aria-label="Regular textarea" 
+            placeholder="Type here"
+            fill="solid"
+            [(ngModel)]="note"
+          ></ion-textarea>
+        </ion-item>
+        <ion-item button="true" detail="false" (click)="modal.dismiss()">
+          <ion-icon name="person-circle"></ion-icon>
+          <ion-label>Item 1</ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-footer class="ion-no-border">
+        <ion-toolbar>
+          <ion-button type="button" (click)="handleSubmit()" >Save</ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </div>
+  </ng-template>
+</ion-modal>

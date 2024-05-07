@@ -1,0 +1,37 @@
+<div class="pd__main">
+  <app-add-note-dialog (addNote)="handleAddNote($event)" />
+  <!-- <ion-button (click)="handleAddNote()">
+    add
+  </ion-button> -->
+  <ion-grid fixed="true">
+    <ion-list>
+      <ion-row *ngFor="let note of notes">
+        <ion-col>
+          <ion-item>
+            <ion-label>
+              {{ note.content }}
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!-- <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>
+              asdads
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>
+              asdads
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row> -->
+    </ion-list>
+  </ion-grid>
+</div>

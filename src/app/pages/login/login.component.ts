@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(u => {
-        console.log('sub in log comp');
         if(u) this.router.navigateByUrl('/tasks')
       })
   }
@@ -82,11 +81,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   handleLogOut() {
-    this.authService.logOut().subscribe();
+    this.authService.logOut().subscribe({
+      next: () => {
+        console.log('login comp logging out');
+        this.router.navigateByUrl('/login');
+      }
+    });
   }
 
   ngOnDestroy() {
-    console.log('destroying login');
     this.destroy$.next('');
     this.destroy$.complete();
   }

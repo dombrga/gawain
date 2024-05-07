@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, defer, of, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, concatMap, defer, from, of, switchMap, throwError } from 'rxjs';
 import { SupabaseService } from '../supabase.service';
 import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
 import { Router } from '@angular/router';
@@ -13,12 +13,14 @@ export class AuthService {
   private auth: SupabaseAuthClient;
 
   // user
+  userDetails: User | null | undefined
   private user = new BehaviorSubject<User | null | undefined>(null);
   get user$() {
     return this.user.asObservable();
   }
   setUser(u: User | null | undefined) {
     this.user.next(u)
+    this.userDetails = u
   }
 
   constructor(
@@ -28,7 +30,7 @@ export class AuthService {
     this.auth = this.supabase.supabase.auth;
 
     this.auth.onAuthStateChange((event, session) => {
-      console.log('auth change', event, session?.user)
+      console.log('auth change', event, session?.user);
       if (event === 'INITIAL_SESSION') {
         this.setUser(session?.user ? session.user : null);
       } else if (event === 'SIGNED_IN') {
@@ -62,8 +64,33 @@ export class AuthService {
   //     );
   // }
 
+  isLoggedIn$(): Observable<boolean> {
+    return this.user$
+      .pipe(
+        concatMap(u => {
+          return u ? of(true) : of(false);
+        })
+      )
+  }
+
   register(email: string, password: string) {
     return defer(() => this.auth.signUp({ email, password}));
+  }
+
+  insertUserToTable(
+    userID: string | undefined, email: string | undefined,
+    createdAt: string | undefined, updatedAt: string | undefined
+  ) {
+    return defer(() => {
+      return this.supabase.supabase
+        .from('user')
+        .insert({
+          user_id: userID,
+          email,
+          created_at: createdAt,
+          updated_at: updatedAt
+        })
+    });
   }
 
   login(email: string, password: string) {
@@ -77,7 +104,8 @@ export class AuthService {
   }
 
   logOut() {
-    return defer(() => this.auth.signOut({ scope: 'local' }));
+    return from(this.auth.signOut({ scope: 'local' }));
+    // return defer(() => this.auth.signOut({ scope: 'local' }));
   }
 
   // getSession() {

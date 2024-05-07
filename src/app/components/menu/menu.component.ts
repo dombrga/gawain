@@ -4,6 +4,7 @@ import { CommonModule, NgFor } from '@angular/common';
 import { MenuItem } from '@/app/types/navigation.type';
 import { MenuItemComponent } from './menu-item/menu-item.component';
 import { AuthService } from '@/app/services/supabase/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -29,6 +30,7 @@ export class MenuComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private router: Router,
   ) {
 
   }
@@ -43,6 +45,7 @@ export class MenuComponent implements OnInit {
     console.log('logging out')
     this.authService.logOut().subscribe({
       next: () => {
+        this.router.navigateByUrl('/login');
         console.log('logged out')
       }
     })
