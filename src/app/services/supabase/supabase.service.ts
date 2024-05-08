@@ -10,6 +10,7 @@ export class SupabaseService {
 
   constructor() {
     // Create a single supabase client for interacting with your database
-    this.supabase = createClient(supabaseConfig.projectUrl, supabaseConfig.apiKey);
+    // this.supabase = createClient(supabaseConfig.projectUrl, supabaseConfig.apiKey);
+    this.supabase = createClient(import.meta.env['NG_APP_SUPABASE_PROJECT_URL'], import.meta.env['NG_APP_SUPABASE_API_KEY']);
   }
 }
